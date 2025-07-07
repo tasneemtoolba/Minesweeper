@@ -3,7 +3,7 @@
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Board from "@/components/board";
 import Timer from "@/components/timer";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 // import Image from "next/image";
 import { difficulty } from "@/config";
 // import Language from "@/components/select-lang";
@@ -25,6 +25,7 @@ import ConnectWallet from "@/components/connect-wallet";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { WagmiProvider } from 'wagmi'
 import { config } from '../wagmi/wagmi'
+import { useMiniKit } from "@coinbase/onchainkit/minikit";
 const queryClient = new QueryClient()
 
 // 2. Set up a React Query client.
@@ -36,6 +37,15 @@ export default function Home() {
   const status = useAppSelector((store) => store.minesweeper.status, shallowEqual);
   const remainingFlags = useAppSelector((store) => store.minesweeper.remainingFlags, shallowEqual);
   const { loaded, progress, rehydrated } = usePreload();
+   const { setFrameReady, isFrameReady } = useMiniKit();
+
+  // The setFrameReady() function is called when your mini-app is ready to be shown
+  useEffect(() => {
+    if (!isFrameReady) {
+      setFrameReady();
+    }
+  }, [setFrameReady, isFrameReady]);
+
   const dispatch = useAppDispatch();
   const handleMini = () => {
     dispatch(toggleMini());
