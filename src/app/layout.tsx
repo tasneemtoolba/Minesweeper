@@ -16,9 +16,9 @@ export const metadata: Metadata = {
   keywords:
     "minesweeper, play minesweeper, game, minesweeper free, minesweeper game, classic minesweeper, minesweeper google, microsoft minesweeper, minesweeper mac, minesweeper windows, mine sweeper, how to play minesweeper",
   category: "game",
-  verification: {
-    google: "REDACTED"
-  },
+  ...(process.env.GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } }
+    : {}),
   alternates: {
     canonical: "https://minesweeper-tasneemtoolbas-projects.vercel.app"
     // languages: {

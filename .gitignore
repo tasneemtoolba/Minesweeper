@@ -17,7 +17,9 @@
 
 # misc
 .DS_Store
+**/.DS_Store
 *.pem
+*.key
 
 # debug
 npm-debug.log*
@@ -25,7 +27,9 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
+.env
+.env.*
+!.env.example
 
 # vercel
 .vercel
@@ -36,3 +40,5 @@ next-env.d.ts
 
 /public/sw*
 /public/workbox-*
+
+.vscode/

@@ -30,14 +30,9 @@ import { difficulty } from "@/config";
 import { startGame } from "@minesweeper";
 import { useSaveScore, useSaveNFT, useGetRandomNumber } from "../hooks/useContract";
 import { getRandomNumber } from "@/contracts/contracts";
-import { PinataSDK } from 'pinata';
+import { uploadToPinata } from "@/lib/pinata";
 import { isWebview } from "@/utils";
 import { useAccount } from 'wagmi';
-
-export const pinata = new PinataSDK({
-  pinataJwt: "REDACTED",
-  pinataGateway: 'REDACTED'
-});
 
 const ModalWin = () => {
   const { width, height } = useWindowSize();
@@ -111,9 +106,7 @@ const ModalWin = () => {
 
       const file = new File([blob], 'minesweeper-win.png', { type: 'image/png' });
 
-      // Upload to IPFS using Pinata
-      const { cid } = await pinata.upload.public.file(file);
-      const url = await pinata.gateways.public.convert(cid);
+      const { url } = await uploadToPinata(file);
 
       const metadata = {
         name: `Minesweeper Win - ${level} Level`,
@@ -133,8 +126,7 @@ const ModalWin = () => {
 
       const metadataBlob = new Blob([JSON.stringify(metadata)], { type: 'application/json' });
       const metadataFile = new File([metadataBlob], 'metadata.json', { type: 'application/json' });
-      const { cid: metadataCid } = await pinata.upload.public.file(metadataFile);
-      const metadataUrl = await pinata.gateways.public.convert(metadataCid);
+      const { url: metadataUrl } = await uploadToPinata(metadataFile);
 
       await saveNFT(metadataUrl);
       // alert('NFT minted successfully!');
